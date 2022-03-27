@@ -23,8 +23,6 @@ from PyQt5.QtGui import *
 #added this
 import multiprocessing
 
-id_testing = "hello"
-
 class mywindow(QMainWindow,Ui_Client):
     def __init__(self, map_1):
         global timer
