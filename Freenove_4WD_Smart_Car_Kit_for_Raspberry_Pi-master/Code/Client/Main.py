@@ -23,7 +23,7 @@ from PyQt5.QtGui import *
 #added this
 import multiprocessing
 
-
+id_testing = "hello"
 
 class mywindow(QMainWindow,Ui_Client):
     def __init__(self, map_1):
@@ -31,6 +31,8 @@ class mywindow(QMainWindow,Ui_Client):
         #added this
         self.carName = str(multiprocessing.current_process().name)
         self.map_1 = map_1
+        self.car_ip = {"Car 1" : "192.168.0.111", "Car 2" : "192.168.0.112",
+                       "Car 3" : "192.168.0.113", "Car 4" : "192.168.0.114"}
         
         super(mywindow,self).__init__()
         self.setupUi(self)
