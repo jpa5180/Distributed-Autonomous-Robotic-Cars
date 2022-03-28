@@ -29,7 +29,7 @@ class mywindow(QMainWindow,Ui_Client):
         #added this
         self.carName = str(multiprocessing.current_process().name)
         self.map_1 = map_1
-        self.car_ip = {"Car 1" : "192.168.0.111", "Car 2" : "192.168.0.112",
+        self.car_ip = {"Car 1" : "192.168.0.100", "Car 2" : "192.168.0.102",
                        "Car 3" : "192.168.0.113", "Car 4" : "192.168.0.114"}
         
         super(mywindow,self).__init__()
@@ -160,6 +160,13 @@ class mywindow(QMainWindow,Ui_Client):
         self.Window_Close.clicked.connect(self.close)
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.time)
+
+        #added this
+        #self.timer.singleShot(500,self.Btn_Connect.animateClick)
+        #time.sleep(0.5)
+        #self.timer.singleShot(500,self.Btn_Mode3.animateClick)
+
+        
     def mousePressEvent(self, event):
         if event.button()==Qt.LeftButton:
             self.m_drag=True
@@ -539,6 +546,11 @@ class mywindow(QMainWindow,Ui_Client):
             print ('Server address:'+str(self.h)+'\n')
         elif self.Btn_Connect.text()=="Disconnect":
             self.Btn_Connect.setText( "Connect")
+            time.sleep(0.5)
+            
+            #added this
+            #self.timer.singleShot(50,self.Btn_Mode1.animateClick)
+            
             try:
                 stop_thread(self.recv)
                 stop_thread(self.power)
@@ -549,6 +561,9 @@ class mywindow(QMainWindow,Ui_Client):
 
 
     def close(self):
+        #added this
+        #self.timer.singleShot(50,self.Btn_Mode1.animateClick)
+        
         self.timer.stop()
         try:
             stop_thread(self.recv)
@@ -678,18 +693,13 @@ if __name__ == '__main__':
     manager = multiprocessing.Manager()
     map_1 = manager.list()
     
-    #car1 = Thread(target=car, name='Car 1')
-    #car2 = Thread(target=car, name='Car 2')
-
-    #car1.start()
-    #car2.start()
     car_1 = multiprocessing.Process(name='Car 1', target=car, args=[map_1])
-    #car_2 = multiprocessing.Process(name='Car 2', target=car)
-    #car_3 = multiprocessing.Process(name='Car 3', target=car)
+    car_2 = multiprocessing.Process(name='Car 2', target=car, args=[map_1])
+    car_3 = multiprocessing.Process(name='Car 3', target=car, args=[map_1])
     car_4 = multiprocessing.Process(name='Car 4', target=car, args=[map_1])
     car_1.start()
-    #car_2.start()
-    #car_3.start()
+    car_2.start()
+    car_3.start()
     car_4.start()
 
     #car_1.join()
@@ -705,17 +715,34 @@ if __name__ == '__main__':
     
     if multiprocessing.current_process().name == "MainProcess":
         while True:
-            time.sleep(5)
-            if not car_1.is_alive() and not car_4.is_alive():
-                sys.exit()
+            time.sleep(2)
+            if not car_1.is_alive() and not car_2.is_alive() and not car_3.is_alive() and not car_4.is_alive():
+                #sys.exit()
+                break
             if not car_1.is_alive():
+                car_1.terminate()
                 car_1 = multiprocessing.Process(name='Car 1', target=car, args=[map_1])
                 car_1.start()
+            if not car_2.is_alive():
+                car_2.terminate()
+                car_2 = multiprocessing.Process(name='Car 2', target=car, args=[map_1])
+                car_2.start()
+            if not car_3.is_alive():
+                car_3.terminate()
+                car_3 = multiprocessing.Process(name='Car 3', target=car, args=[map_1])
+                car_3.start()
             if not car_4.is_alive():
+                car_4.terminate()
                 car_4 = multiprocessing.Process(name='Car 4', target=car, args=[map_1])
                 car_4.start()
+            time.sleep(2)
 
+    #car_1.terminate()
+    #car_2.terminate()
+    #car_3.terminate()
+    #car_4.terminate()
     print(map_1)
+    sys.exit()
     
     
 

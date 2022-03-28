@@ -544,7 +544,10 @@ class Ui_Client(object):
         _translate = QtCore.QCoreApplication.translate
         Client.setWindowTitle(_translate("Client", "freenove"))
         self.Btn_ForWard.setText(_translate("Client", "ForWard"))
+        
+        #added this
         self.name.setText(_translate("Client", Client.carName))
+        
         self.Btn_Turn_Left.setText(_translate("Client", "Turn Left"))
         self.Btn_BackWard.setText(_translate("Client", "BackWard"))
         self.Btn_Turn_Right.setText(_translate("Client", "Turn Right"))
@@ -556,7 +559,10 @@ class Ui_Client(object):
         self.Btn_Right.setText(_translate("Client", "Right"))
         self.Window_Close.setText(_translate("Client", "×"))
         #self.IP.setText(_translate("Client", "IP Address"))
+
+        #added this
         self.IP.setText(_translate("Client", Client.car_ip.get(Client.carName)))
+        
         self.Btn_Connect.setText(_translate("Client", "Connect"))
         self.checkBox_Led1.setText(_translate("Client", "Led1"))
         self.label_Servo2.setText(_translate("Client", "0"))
