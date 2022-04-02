@@ -29,7 +29,7 @@ class mywindow(QMainWindow,Ui_Client):
         #added this
         self.carName = str(multiprocessing.current_process().name)
         self.map_1 = map_1
-        self.car_ip = {"Car 1" : "192.168.0.111", "Car 2" : "192.168.0.112",
+        self.car_ip = {"Car 1" : "192.168.0.101", "Car 2" : "192.168.0.112",
                        "Car 3" : "192.168.0.113", "Car 4" : "192.168.0.114"}
         
         super(mywindow,self).__init__()
@@ -691,11 +691,29 @@ class mywindow(QMainWindow,Ui_Client):
             print(e)
         self.TCP.video_Flag=True
 
+#added this
 def car(map_1):
     app = QApplication(sys.argv)
     myshow=mywindow(map_1)
     myshow.show();
     sys.exit(app.exec_())
+
+def destroy():
+    car_1.terminate()
+    car_2.terminate()
+    car_3.terminate()
+    car_4.terminate()
+    
+    if os.path.exists('video_1.jpg'):
+        os.remove('video_1.jpg')
+    if os.path.exists('video_2.jpg'):
+        os.remove('video_2.jpg')
+    if os.path.exists('video_3.jpg'):
+        os.remove('video_3.jpg')
+    if os.path.exists('video_4.jpg'):
+        os.remove('video_4.jpg')
+    
+
             
 if __name__ == '__main__':
     try:
@@ -726,7 +744,6 @@ if __name__ == '__main__':
             while True:
                 time.sleep(2)
                 if not car_1.is_alive() and not car_2.is_alive() and not car_3.is_alive() and not car_4.is_alive():
-                    #sys.exit()
                     break
                 if not car_1.is_alive():
                     car_1.terminate()
@@ -753,10 +770,7 @@ if __name__ == '__main__':
         print(map_1)
 
     except KeyboardInterrupt:  # When 'Ctrl+C' is pressed, the child program destroy() will be  executed.
-        car_1.terminate()
-        car_2.terminate()
-        car_3.terminate()
-        car_4.terminate()
+        destroy()
 
     sys.exit()
     
