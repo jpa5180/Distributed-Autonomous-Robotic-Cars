@@ -61,7 +61,7 @@ class VideoStreaming:
         #added this
         if self.carName == 'Car 1':
             vid = 'video_1.jpg'
-        elif self.carName == 'Car 3':
+        elif self.carName == 'Car 2':
             vid = 'video_2.jpg'
         elif self.carName == 'Car 3':
             vid = 'video_3.jpg'

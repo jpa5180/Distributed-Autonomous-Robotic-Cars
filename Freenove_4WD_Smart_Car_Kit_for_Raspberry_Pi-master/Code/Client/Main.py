@@ -29,7 +29,7 @@ class mywindow(QMainWindow,Ui_Client):
         #added this
         self.carName = str(multiprocessing.current_process().name)
         self.map_1 = map_1
-        self.car_ip = {"Car 1" : "192.168.0.100", "Car 2" : "192.168.0.102",
+        self.car_ip = {"Car 1" : "192.168.0.111", "Car 2" : "192.168.0.112",
                        "Car 3" : "192.168.0.113", "Car 4" : "192.168.0.114"}
         
         super(mywindow,self).__init__()
@@ -163,9 +163,12 @@ class mywindow(QMainWindow,Ui_Client):
 
         #added this
         #self.timer.singleShot(500,self.Btn_Connect.animateClick)
-        #time.sleep(0.5)
-        #self.timer.singleShot(500,self.Btn_Mode3.animateClick)
+        self.press_Button(self.Btn_Connect)
 
+    #added this
+    def press_Button(self, button):
+        self.timer.singleShot(500,button.animateClick)
+        
         
     def mousePressEvent(self, event):
         if event.button()==Qt.LeftButton:
@@ -544,12 +547,17 @@ class mywindow(QMainWindow,Ui_Client):
                 print ('recv error')
             self.Btn_Connect.setText( "Disconnect")
             print ('Server address:'+str(self.h)+'\n')
+
+            #added this
+            #self.timer.singleShot(500,self.Btn_Mode3.animateClick)
+            
         elif self.Btn_Connect.text()=="Disconnect":
             self.Btn_Connect.setText( "Connect")
-            time.sleep(0.5)
             
             #added this
+            #time.sleep(0.5)
             #self.timer.singleShot(50,self.Btn_Mode1.animateClick)
+            #self.press_Button(self.Btn_Mode1)
             
             try:
                 stop_thread(self.recv)
@@ -575,7 +583,7 @@ class mywindow(QMainWindow,Ui_Client):
         #added this
         if self.carName == 'Car 1':
             vid = 'video_1.jpg'
-        elif self.carName == 'Car 3':
+        elif self.carName == 'Car 2':
             vid = 'video_2.jpg'
         elif self.carName == 'Car 3':
             vid = 'video_3.jpg'
@@ -667,7 +675,7 @@ class mywindow(QMainWindow,Ui_Client):
         #added this
         if self.carName == 'Car 1':
             vid = 'video_1.jpg'
-        elif self.carName == 'Car 3':
+        elif self.carName == 'Car 2':
             vid = 'video_2.jpg'
         elif self.carName == 'Car 3':
             vid = 'video_3.jpg'
@@ -690,60 +698,67 @@ def car(map_1):
     sys.exit(app.exec_())
             
 if __name__ == '__main__':
-    manager = multiprocessing.Manager()
-    map_1 = manager.list()
-    
-    car_1 = multiprocessing.Process(name='Car 1', target=car, args=[map_1])
-    car_2 = multiprocessing.Process(name='Car 2', target=car, args=[map_1])
-    car_3 = multiprocessing.Process(name='Car 3', target=car, args=[map_1])
-    car_4 = multiprocessing.Process(name='Car 4', target=car, args=[map_1])
-    car_1.start()
-    car_2.start()
-    car_3.start()
-    car_4.start()
+    try:
+        manager = multiprocessing.Manager()
+        map_1 = manager.list()
+        
+        car_1 = multiprocessing.Process(name='Car 1', target=car, args=[map_1])
+        car_2 = multiprocessing.Process(name='Car 2', target=car, args=[map_1])
+        car_3 = multiprocessing.Process(name='Car 3', target=car, args=[map_1])
+        car_4 = multiprocessing.Process(name='Car 4', target=car, args=[map_1])
+        car_1.start()
+        car_2.start()
+        car_3.start()
+        car_4.start()
 
-    #car_1.join()
-    #car_2.join()
-    #car_3.join()
-    #car_4.join()
+        #car_1.join()
+        #car_2.join()
+        #car_3.join()
+        #car_4.join()
 
-    print('\n')
-    print(map_1)
+        print('\n')
+        print(map_1)
 
-    #sys.exit(app.exec_())
+        #sys.exit(app.exec_())
 
-    
-    if multiprocessing.current_process().name == "MainProcess":
-        while True:
-            time.sleep(2)
-            if not car_1.is_alive() and not car_2.is_alive() and not car_3.is_alive() and not car_4.is_alive():
-                #sys.exit()
-                break
-            if not car_1.is_alive():
-                car_1.terminate()
-                car_1 = multiprocessing.Process(name='Car 1', target=car, args=[map_1])
-                car_1.start()
-            if not car_2.is_alive():
-                car_2.terminate()
-                car_2 = multiprocessing.Process(name='Car 2', target=car, args=[map_1])
-                car_2.start()
-            if not car_3.is_alive():
-                car_3.terminate()
-                car_3 = multiprocessing.Process(name='Car 3', target=car, args=[map_1])
-                car_3.start()
-            if not car_4.is_alive():
-                car_4.terminate()
-                car_4 = multiprocessing.Process(name='Car 4', target=car, args=[map_1])
-                car_4.start()
-            time.sleep(2)
+        
+        if multiprocessing.current_process().name == "MainProcess":
+            while True:
+                time.sleep(2)
+                if not car_1.is_alive() and not car_2.is_alive() and not car_3.is_alive() and not car_4.is_alive():
+                    #sys.exit()
+                    break
+                if not car_1.is_alive():
+                    car_1.terminate()
+                    car_1 = multiprocessing.Process(name='Car 1', target=car, args=[map_1])
+                    car_1.start()
+                if not car_2.is_alive():
+                    car_2.terminate()
+                    car_2 = multiprocessing.Process(name='Car 2', target=car, args=[map_1])
+                    car_2.start()
+                if not car_3.is_alive():
+                    car_3.terminate()
+                    car_3 = multiprocessing.Process(name='Car 3', target=car, args=[map_1])
+                    car_3.start()
+                if not car_4.is_alive():
+                    car_4.terminate()
+                    car_4 = multiprocessing.Process(name='Car 4', target=car, args=[map_1])
+                    car_4.start()
+                time.sleep(2)
 
-    #car_1.terminate()
-    #car_2.terminate()
-    #car_3.terminate()
-    #car_4.terminate()
-    print(map_1)
+        #car_1.terminate()
+        #car_2.terminate()
+        #car_3.terminate()
+        #car_4.terminate()
+        print(map_1)
+
+    except KeyboardInterrupt:  # When 'Ctrl+C' is pressed, the child program destroy() will be  executed.
+        car_1.terminate()
+        car_2.terminate()
+        car_3.terminate()
+        car_4.terminate()
+
     sys.exit()
-    
     
 
 
