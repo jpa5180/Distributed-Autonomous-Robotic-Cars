@@ -29,7 +29,7 @@ class mywindow(QMainWindow,Ui_Client):
         #added this
         self.carName = str(multiprocessing.current_process().name)
         self.map_1 = map_1
-        self.car_ip = {"Car 1" : "192.168.0.101", "Car 2" : "192.168.0.112",
+        self.car_ip = {"Car 1" : "192.168.0.111", "Car 2" : "192.168.0.112",
                        "Car 3" : "192.168.0.113", "Car 4" : "192.168.0.114"}
         
         super(mywindow,self).__init__()
@@ -549,7 +549,7 @@ class mywindow(QMainWindow,Ui_Client):
             print ('Server address:'+str(self.h)+'\n')
 
             #added this
-            #self.timer.singleShot(500,self.Btn_Mode3.animateClick)
+            self.timer.singleShot(500,self.Btn_Mode3.animateClick)
             
         elif self.Btn_Connect.text()=="Disconnect":
             self.Btn_Connect.setText( "Connect")
