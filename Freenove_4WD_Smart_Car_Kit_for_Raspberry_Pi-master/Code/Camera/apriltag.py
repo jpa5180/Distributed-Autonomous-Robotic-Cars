@@ -48,8 +48,9 @@ class Apriltag:
 
     def dist(self, tag):
         x, y, z = tag.pose_t[0][0], tag.pose_t[1][0], tag.pose_t[2][0]
-        dist = self.hypot(self.hypot(x, y), z)
-        return dist
+        dist_m = self.hypot(self.hypot(x, y), z)
+        dist_cm = int(dist_m * 100)
+        return dist_cm
 
     def hypot(self, a, b):
         return math.sqrt(a * a + b * b)
