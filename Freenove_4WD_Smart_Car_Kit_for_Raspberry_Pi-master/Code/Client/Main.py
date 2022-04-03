@@ -32,8 +32,8 @@ class mywindow(QMainWindow,Ui_Client):
         self.car_ip = {"Car 1" : "192.168.0.111", "Car 2" : "192.168.0.112",
                        "Car 3" : "192.168.0.113", "Car 4" : "192.168.0.114"}
         self.tags = {0 : "Car 1", 1 : "Car 1", 2 : "Car 1", 3 : "Car 1",
-                     4 : "Car 2", 5 : "Car 2", 6 : "Car 2", 7 : "Car 2"
-                     8 : "Car 3", 9 : "Car 3", 10 : "Car 3", 11 : "Car 3"
+                     4 : "Car 2", 5 : "Car 2", 6 : "Car 2", 7 : "Car 2",
+                     8 : "Car 3", 9 : "Car 3", 10 : "Car 3", 11 : "Car 3",
                      12 : "Car 4", 13 : "Car 3", 14 : "Car 3", 15 : "Car 3"}
         
         super(mywindow,self).__init__()
@@ -167,7 +167,7 @@ class mywindow(QMainWindow,Ui_Client):
 
         #added this
         #self.timer.singleShot(500,self.Btn_Connect.animateClick)
-        self.press_Button(self.Btn_Connect)
+        #self.press_Button(self.Btn_Connect)
 
     #added this
     def press_Button(self, button):
