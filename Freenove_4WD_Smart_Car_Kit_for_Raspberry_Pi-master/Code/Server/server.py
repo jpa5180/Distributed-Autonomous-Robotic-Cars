@@ -127,26 +127,28 @@ class Server:
 
                 for foo in camera.capture_continuous(stream, 'jpeg', use_video_port = True):
                     try:
-                        self.connection.flush()
+                        #self.connection.flush()
                         stream.seek(0)
                         b = stream.read()
 
                         # Added code for april tags
                         img = cv2.imdecode(np.frombuffer(b, dtype=np.uint8), cv2.IMREAD_COLOR)[:, :, 0]
                         dist_info = apriltag.detect(img=img)
-                        #[print(info) for info in dist_info]
+                        #dist_list = [info for info in dist_info if info[1] < 45]
+                        #if dist_list: 
+       
                         #added this
                         msg = pickle.dumps(dist_info)
-                        #msg = bytes(f"{len(msg):<{HEADERSIZE}}", 'utf-8')+msg
+                        msg = bytes(f"{len(msg):<{HEADERSIZE}}", 'utf-8')+msg
                         self.connection2.send(msg)
                         
 
-                        length=len(b)
-                        if length >5120000:
-                            continue
-                        lengthBin = struct.pack('L', length)
-                        self.connection.write(lengthBin)
-                        self.connection.write(b)
+                        #length=len(b)
+                        #if length >5120000:
+                        #    continue
+                        #lengthBin = struct.pack('L', length)
+                        #self.connection.write(lengthBin)
+                        #self.connection.write(b)
                         stream.seek(0)
                         stream.truncate()
                     except Exception as e:

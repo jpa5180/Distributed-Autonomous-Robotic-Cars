@@ -99,25 +99,45 @@ class VideoStreaming:
         while True:
             #added this
             try:
-                data=self.client_socket2.recv(4096)
-                dist_list = pickle.loads(data)
-                print(dist_list)
+                full_msg = b''
+                new_msg = True
+                while True:
+                    msg = self.client_socket2.recv(4096)
+                    if new_msg:
+                        msglen = int(msg[:HEADERSIZE])
+                        new_msg = False
+
+                    full_msg += msg
+
+                    if len(full_msg)-HEADERSIZE == msglen:
+                        dist_list = pickle.loads(full_msg[HEADERSIZE:])
+                        new_msg = True
+                        full_msg = b''
+                        print(dist_list)
+                        break
+
+                
+                #data=self.client_socket2.recv(4096)
+                #dist_list = pickle.loads(data)
+                #print(self.carName)
+                #print(dist_list)
                 
             except Exception as e:
                 print (e)
-            
-            try:
-                stream_bytes= self.connection.read(4) 
-                leng=struct.unpack('<L', stream_bytes[:4])
-                jpg=self.connection.read(leng[0])
-                if self.IsValidImage4Bytes(jpg):
-                            image = cv2.imdecode(np.frombuffer(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
-                            if self.video_Flag:
-                                self.face_detect(image)
-                                self.video_Flag=False
-            except Exception as e:
-                print (e)
                 break
+            
+            #try:
+                #stream_bytes= self.connection.read(4) 
+                #leng=struct.unpack('<L', stream_bytes[:4])
+                #jpg=self.connection.read(leng[0])
+                #if self.IsValidImage4Bytes(jpg):
+                #            image = cv2.imdecode(np.frombuffer(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
+                #            if self.video_Flag:
+                #                self.face_detect(image)
+                #                self.video_Flag=False
+            #except Exception as e:
+            #    print (e)
+            #    break
                   
     def sendData(self,s):
         if self.connect_Flag:
