@@ -60,6 +60,9 @@ class Server:
         try:
             self.connection.close()
             self.connection1.close()
+            #added this
+            self.stopMode()
+            self.Mode='one'
         except Exception as e:
             print ('\n'+"No client connection")
          
@@ -102,6 +105,10 @@ class Server:
                         stream.seek(0)
                         stream.truncate()
                     except Exception as e:
+                        #added this
+                        self.stopMode()
+                        self.Mode='one'
+                        
                         print(e)
                         print ("End transmit ... " )
                         break
@@ -258,8 +265,12 @@ class Server:
                             self.send(cmd.CMD_POWER+'#'+str(ADC_Power)+'\n')
                         except:
                             pass
-        except Exception as e: 
+        except Exception as e:
+            #added this
+            self.stopMode()
+            self.Mode='one'
             print(e)
+            
         self.StopTcpServer()    
     def sendUltrasonic(self):
         if self.sonic==True:

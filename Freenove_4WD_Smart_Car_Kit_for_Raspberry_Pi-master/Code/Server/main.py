@@ -73,6 +73,10 @@ class mywindow(QMainWindow,Ui_server_ui):
                 self.user_ui=False
                         
     def close(self):
+        #added this
+        self.TCP_Server.stopMode()
+        self.TCP_Server.Mode='one'
+
         try:
            stop_thread(self.SendVideo)
            stop_thread(self.ReadData)
@@ -104,6 +108,10 @@ class mywindow(QMainWindow,Ui_server_ui):
             self.power.start()
             
         elif self.label.text()=='Server On':
+            #added this
+            self.TCP_Server.stopMode()
+            self.TCP_Server.Mode='one'
+            
             self.label.setText("Server Off")
             self.Button_Server.setText("On")
             self.TCP_Server.tcp_Flag = False
