@@ -99,6 +99,7 @@ class VideoStreaming:
         while True:
             #added this
             try:
+                HEADERSIZE = 10
                 full_msg = b''
                 new_msg = True
                 while True:

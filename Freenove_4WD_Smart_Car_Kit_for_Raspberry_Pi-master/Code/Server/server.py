@@ -124,6 +124,7 @@ class Server:
 
                 # Added code for april tags
                 apriltag = Apriltag()
+                HEADERSIZE = 10
 
                 for foo in camera.capture_continuous(stream, 'jpeg', use_video_port = True):
                     try:
