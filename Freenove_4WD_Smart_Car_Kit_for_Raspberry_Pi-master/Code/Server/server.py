@@ -111,7 +111,7 @@ class Server:
         self.server_socket.close()
         
         #added this
-        self.server_socket2.close()
+        #self.server_socket2.close()
         try:
             with picamera.PiCamera() as camera:
                 camera.resolution = (400,300)      # pi camera resolution
@@ -164,6 +164,9 @@ class Server:
         except:
             #print "Camera unintall"
             pass
+        
+        #added this
+        self.server_socket2.close()
                  
     def stopMode(self):
         try:
