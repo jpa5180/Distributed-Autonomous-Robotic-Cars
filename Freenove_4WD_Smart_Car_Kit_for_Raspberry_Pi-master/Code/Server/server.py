@@ -25,7 +25,10 @@ import os
 import cv2
 import numpy as np
 sys.path.append(os.path.abspath(os.path.join('../')))
+
+#added this
 from Camera.apriltag import Apriltag
+import pickle
 
 
 class Server:   
@@ -60,6 +63,13 @@ class Server:
         self.server_socket.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEPORT,1)
         self.server_socket.bind((HOST, 8000))              
         self.server_socket.listen(1)
+
+        #added this
+        self.server_socket2 = socket.socket()
+        self.server_socket2.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEPORT,1)
+        self.server_socket2.bind((HOST, 6000))
+        self.server_socket2.listen(1)
+        
         print('Server address: '+HOST)
         
         
@@ -67,7 +77,9 @@ class Server:
         try:
             self.connection.close()
             self.connection1.close()
+            
             #added this
+            self.connection2.close()
             self.stopMode()
             self.Mode='one'
         except Exception as e:
@@ -88,7 +100,18 @@ class Server:
             self.connection=self.connection.makefile('wb')
         except:
             pass
+
+        #added this
+        try:
+            self.connection2,self.client_address2 = self.server_socket2.accept()
+            #self.connection2=self.connection2.makefile('wb')
+        except:
+            pass
+        
         self.server_socket.close()
+        
+        #added this
+        self.server_socket2.close()
         try:
             with picamera.PiCamera() as camera:
                 camera.resolution = (400,300)      # pi camera resolution
@@ -111,7 +134,12 @@ class Server:
                         # Added code for april tags
                         img = cv2.imdecode(np.frombuffer(b, dtype=np.uint8), cv2.IMREAD_COLOR)[:, :, 0]
                         dist_info = apriltag.detect(img=img)
-                        [print(info) for info in dist_info]
+                        #[print(info) for info in dist_info]
+                        #added this
+                        msg = pickle.dumps(dist_info)
+                        #msg = bytes(f"{len(msg):<{HEADERSIZE}}", 'utf-8')+msg
+                        self.connection2.send(msg)
+                        
 
                         length=len(b)
                         if length >5120000:
