@@ -21,6 +21,13 @@ from threading import Timer
 from threading import Thread
 from Command import COMMAND as cmd
 
+import os
+import cv2
+import numpy as np
+sys.path.append(os.path.abspath(os.path.join('../')))
+from Camera.apriltag import Apriltag
+
+
 class Server:   
     def __init__(self):
         self.PWM=Motor()
@@ -91,11 +98,21 @@ class Server:
                 stream = io.BytesIO()
                 # send jpeg format video stream
                 print ("Start transmit ... ")
+
+                # Added code for april tags
+                apriltag = Apriltag()
+
                 for foo in camera.capture_continuous(stream, 'jpeg', use_video_port = True):
                     try:
                         self.connection.flush()
                         stream.seek(0)
                         b = stream.read()
+
+                        # Added code for april tags
+                        img = cv2.imdecode(np.frombuffer(b, dtype=np.uint8), cv2.IMREAD_COLOR)[:, :, 0]
+                        dist_info = apriltag.detect(img=img)
+                        [print(info) for info in dist_info]
+
                         length=len(b)
                         if length >5120000:
                             continue
