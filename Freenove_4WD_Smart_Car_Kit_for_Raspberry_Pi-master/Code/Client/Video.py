@@ -118,13 +118,15 @@ class VideoStreaming:
 ##                        print(dist_list)
 ##                        break
 
+                data=""
                 data=self.client_socket2.recv(1024)
                 dist_list = pickle.loads(data)
                 print(self.carName)
                 print(dist_list)
                 
             except Exception as e:
-                print (e)
+                print("Unpickling Error: ")
+                print(e)
                 break
             
             #try:

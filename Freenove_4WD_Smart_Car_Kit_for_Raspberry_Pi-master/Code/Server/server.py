@@ -129,6 +129,7 @@ class Server:
                 for foo in camera.capture_continuous(stream, 'jpeg', use_video_port = True):
                     try:
                         #self.connection.flush()
+                        self.connection2.flush()
                         stream.seek(0)
                         b = stream.read()
 
@@ -141,7 +142,7 @@ class Server:
                         #added this
                         msg = pickle.dumps(dist_info)
                         #msg = bytes(f"{len(msg):<{HEADERSIZE}}", 'utf-8')+msg
-                        self.connection2.send(msg)
+                        self.connection2.sendall(msg)
                         
 
                         #length=len(b)
