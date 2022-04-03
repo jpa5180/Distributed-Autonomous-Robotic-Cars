@@ -102,7 +102,7 @@ class VideoStreaming:
                 HEADERSIZE = 10
                 full_msg = b''
                 new_msg = True
-                while True:
+                while len(full_msg)-HEADERSIZE == msglen:
                     msg = self.client_socket2.recv(1024)
                     if new_msg:
                         msglen = int(msg[:HEADERSIZE])
@@ -110,13 +110,12 @@ class VideoStreaming:
 
                     full_msg += msg
 
-                    if len(full_msg)-HEADERSIZE == msglen:
-                        dist_list = pickle.loads(full_msg[HEADERSIZE:])
-                        new_msg = True
-                        full_msg = b''
-                        print(self.carName)
-                        print(dist_list)
-                        break
+                    
+                dist_list = pickle.loads(full_msg[HEADERSIZE:])
+                #new_msg = True
+                #full_msg = b''
+                print(self.carName)
+                print(dist_list)
 
 ##                data=""
 ##                data=self.client_socket2.recv(1024)
