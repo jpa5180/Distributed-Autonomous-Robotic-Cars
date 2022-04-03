@@ -549,7 +549,7 @@ class mywindow(QMainWindow,Ui_Client):
             print ('Server address:'+str(self.h)+'\n')
 
             #added this
-            self.timer.singleShot(500,self.Btn_Mode3.animateClick)
+            #self.timer.singleShot(500,self.Btn_Mode3.animateClick)
             
         elif self.Btn_Connect.text()=="Disconnect":
             self.Btn_Connect.setText( "Connect")

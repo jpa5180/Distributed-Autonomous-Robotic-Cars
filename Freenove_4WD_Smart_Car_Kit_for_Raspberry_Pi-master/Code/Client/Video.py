@@ -10,6 +10,9 @@ from PIL import Image
 from multiprocessing import Process
 from Command import COMMAND as cmd
 
+#added this
+import pickle
+
 class VideoStreaming:
     def __init__(self, car):
         self.face_cascade = cv2.CascadeClassifier(r'haarcascade_frontalface_default.xml')
@@ -24,12 +27,18 @@ class VideoStreaming:
     def StartTcpClient(self,IP):
         self.client_socket1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        #added this
+        self.client_socket2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     def StopTcpcClient(self):
         try:
             self.client_socket.shutdown(2)
             self.client_socket1.shutdown(2)
             self.client_socket.close()
             self.client_socket1.close()
+
+            #added this
+            self.client_socket2.shutdown(2)
+            self.client_socket2.close()
         except:
             pass
 
@@ -72,25 +81,31 @@ class VideoStreaming:
         
     def streaming(self,ip):
         stream_bytes = b' '
-        
-        #added this
-        #if self.carName == 'Car 1':
-        #    PORT = 8000
-        #elif self.carName == 'Car 3':
-        #    PORT = 8010
-        #elif self.carName == 'Car 3':
-        #    PORT = 8020
-        #elif self.carName == 'Car 4':
-        #    PORT = 8030
             
         try:
             self.client_socket.connect((ip, 8000))
-            #self.client_socket.connect((ip, PORT))
             self.connection = self.client_socket.makefile('rb')
         except:
             #print "command port connect failed"
             pass
+
+        #added this
+        try:
+            self.client_socket2.connect((ip, 6000))
+        except:
+            #print "command port connect failed"
+            pass
+        
         while True:
+            #added this
+            try:
+                data=self.client_socket2.recv(4096)
+                dist_list = pickle.loads(data)
+                print(dist_list)
+                
+            except Exception as e:
+                print (e)
+            
             try:
                 stream_bytes= self.connection.read(4) 
                 leng=struct.unpack('<L', stream_bytes[:4])
@@ -117,17 +132,6 @@ class VideoStreaming:
         return data
 
     def socket1_connect(self,ip):
-
-        #added this
-        #if self.carName == 'Car 1':
-        #    PORT = 5000
-        #elif self.carName == 'Car 3':
-        #    PORT = 5010
-        #elif self.carName == 'Car 3':
-        #    PORT = 5020
-        #elif self.carName == 'Car 4':
-        #    PORT = 5030
-            
         try:
             self.client_socket1.connect((ip, 5000))
             self.connect_Flag=True
