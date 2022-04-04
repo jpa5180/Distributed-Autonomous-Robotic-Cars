@@ -117,8 +117,8 @@ class VideoStreaming:
                 dist_list = pickle.loads(full_msg[HEADERSIZE:])
                 #new_msg = True
                 #full_msg = b''
-                #print(self.carName)
-                #print(dist_list)
+                print(self.carName)
+                print(dist_list)
         
                 #print("Step 5")
 

@@ -172,6 +172,13 @@ class mywindow(QMainWindow,Ui_Client):
     #added this
     def press_Button(self, button):
         self.timer.singleShot(500,button.animateClick)
+
+    def check_stop(self, timer):
+        while True:
+            time.sleep(2)
+            timer.singleShot(500,self.Btn_Mode1.animateClick)
+            time.sleep(2)
+            timer.singleShot(500,self.Btn_Mode3.animateClick)
         
         
     def mousePressEvent(self, event):
@@ -528,7 +535,12 @@ class mywindow(QMainWindow,Ui_Client):
                 self.map_1.append(self.carName)
                 
                 #self.timer.stop()
-                self.TCP.sendData(cmd.CMD_MODE+self.intervalChar+'three'+self.endChar)    
+                self.TCP.sendData(cmd.CMD_MODE+self.intervalChar+'three'+self.endChar)
+
+                #time.sleep(3)
+                #added this
+                self.press_Button(self.Btn_Mode1)
+                    
         if Mode.text() == "M-Line":
             if Mode.isChecked() == True:
                 #self.timer.stop()
@@ -549,6 +561,7 @@ class mywindow(QMainWindow,Ui_Client):
                 self.recv.start()
             except:
                 print ('recv error')
+                
             self.Btn_Connect.setText( "Disconnect")
             print ('Server address:'+str(self.h)+'\n')
 
