@@ -135,13 +135,11 @@ class Server:
                         # Added code for april tags
                         img = cv2.imdecode(np.frombuffer(b, dtype=np.uint8), cv2.IMREAD_COLOR)[:, :, 0]
                         dist_info = apriltag.detect(img=img)
-                        #dist_list = [info for info in dist_info if info[1] < 45]
-                        #if dist_list: 
-       
-                        #added this
-                        msg = pickle.dumps(dist_info)
-                        msg = bytes(f"{len(msg):<{HEADERSIZE}}", 'utf-8')+msg
-                        self.connection2.sendall(msg)
+                        if dist_info: 
+                            #added this
+                            msg = pickle.dumps(dist_info)
+                            msg = bytes(f"{len(msg):<{HEADERSIZE}}", 'utf-8')+msg
+                            self.connection2.sendall(msg)
                         
 
                         #length=len(b)

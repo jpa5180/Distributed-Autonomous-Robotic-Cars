@@ -98,24 +98,29 @@ class VideoStreaming:
         
         while True:
             #added this
+            #print("Step 1")
             try:
                 HEADERSIZE = 10
                 full_msg = b''
                 new_msg = True
-                while len(full_msg)-HEADERSIZE == msglen:
+                #print("Step 2")
+                msg = self.client_socket2.recv(1024)
+                msglen = int(msg[:HEADERSIZE])
+                full_msg += msg
+                while len(full_msg)-HEADERSIZE < msglen:
+                    #print("Step 3")
                     msg = self.client_socket2.recv(1024)
-                    if new_msg:
-                        msglen = int(msg[:HEADERSIZE])
-                        new_msg = False
-
                     full_msg += msg
 
-                    
+                #print("\n")
+                #print(full_msg)
                 dist_list = pickle.loads(full_msg[HEADERSIZE:])
                 #new_msg = True
                 #full_msg = b''
-                print(self.carName)
-                print(dist_list)
+                #print(self.carName)
+                #print(dist_list)
+        
+                #print("Step 5")
 
 ##                data=""
 ##                data=self.client_socket2.recv(1024)
@@ -124,9 +129,12 @@ class VideoStreaming:
 ##                print(dist_list)
                 
             except Exception as e:
+                #print("Step 5")
                 print("Unpickling Error: ")
                 print(e)
                 break
+            
+            #print("Step 6")
             
             #try:
                 #stream_bytes= self.connection.read(4) 
