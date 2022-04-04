@@ -18,6 +18,7 @@ with open('../Camera/calibration_result.txt') as f:
 
 
 TAG_SIZE = 0.034 # in meters
+COLLISION_DIST = 50
 
 
 class Apriltag:
@@ -44,7 +45,7 @@ class Apriltag:
             print('\nTag not found.\n')
             return []
         else:
-            return [(tag.tag_id, self.dist(tag)) for tag in tags]
+            return [(tag.tag_id, self.dist(tag)) for tag in tags if self.dist(tag) <= COLLISION_DIST]
 
     def dist(self, tag):
         x, y, z = tag.pose_t[0][0], tag.pose_t[1][0], tag.pose_t[2][0]
