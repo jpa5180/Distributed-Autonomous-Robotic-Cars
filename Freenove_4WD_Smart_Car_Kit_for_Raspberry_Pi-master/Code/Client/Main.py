@@ -31,10 +31,6 @@ class mywindow(QMainWindow,Ui_Client):
         self.map_1 = map_1
         self.car_ip = {"Car 1" : "192.168.0.111", "Car 2" : "192.168.0.112",
                        "Car 3" : "192.168.0.113", "Car 4" : "192.168.0.114"}
-        self.tags = {0 : "Car 1", 1 : "Car 1", 2 : "Car 1", 3 : "Car 1",
-                     4 : "Car 2", 5 : "Car 2", 6 : "Car 2", 7 : "Car 2",
-                     8 : "Car 3", 9 : "Car 3", 10 : "Car 3", 11 : "Car 3",
-                     12 : "Car 4", 13 : "Car 3", 14 : "Car 3", 15 : "Car 3"}
         
         super(mywindow,self).__init__()
         self.setupUi(self)
@@ -759,7 +755,7 @@ if __name__ == '__main__':
         
         if multiprocessing.current_process().name == "MainProcess":
             while True:
-                time.sleep(2)
+                time.sleep(3)
                 if not car_1.is_alive() and not car_2.is_alive() and not car_3.is_alive() and not car_4.is_alive():
                     break
                 if not car_1.is_alive():
@@ -778,7 +774,7 @@ if __name__ == '__main__':
                     car_4.terminate()
                     car_4 = multiprocessing.Process(name='Car 4', target=car, args=[map_1])
                     car_4.start()
-                time.sleep(2)
+                #time.sleep(2)
 
         #car_1.terminate()
         #car_2.terminate()

@@ -20,6 +20,10 @@ class VideoStreaming:
         self.connect_Flag=False
         self.face_x=0
         self.face_y=0
+        self.tags = {0 : "Car 1", 1 : "Car 1", 2 : "Car 1", 3 : "Car 1",
+                     4 : "Car 2", 5 : "Car 2", 6 : "Car 2", 7 : "Car 2",
+                     8 : "Car 3", 9 : "Car 3", 10 : "Car 3", 11 : "Car 3",
+                     12 : "Car 4", 13 : "Car 3", 14 : "Car 3", 15 : "Car 3"}
 
         #added this
         self.carName=car
@@ -117,8 +121,24 @@ class VideoStreaming:
                 dist_list = pickle.loads(full_msg[HEADERSIZE:])
                 #new_msg = True
                 #full_msg = b''
-                print(self.carName)
-                print(dist_list)
+
+                #added this
+                direction = "no dir"
+                for dist in dist_list:
+                    car_dir = dist[0]
+                    if car_dir % 4 == 0:
+                        direction = "driving towards me"
+                    elif car_dir % 4 == 1:
+                        direction = "driving east of me"
+                    elif car_dir % 4 == 2:
+                        direction = "driving in front of me"
+                    elif car_dir % 4 == 3:
+                        direction = "driving west of me"
+
+                    print(self.carName + ": detected " + self.tags.get(car_dir) + " at " + str(dist[1]) + "cm and " + direction)  
+                    
+                #print(self.carName)
+                #print(dist_list)
         
                 #print("Step 5")
 
