@@ -25,22 +25,6 @@ import multiprocessing
 from pynput.keyboard import Key, Controller
 from queue import Queue
 
-class Worker(QThread):
-        #self.timer = times
-        def __init__(self, timer):
-            super(QThread, self).__init__()
-            self.timer = timer
-        
-        def run(self):
-            while True:
-                print("Step 5")
-                time.sleep(2)
-                self.timer.singleShot(500,self.Btn_Mode3.animateClick)
-                time.sleep(2)
-                self.timer.singleShot(500,self.Btn_Mode1.animateClick)
-
-
-
 
 class mywindow(QMainWindow,Ui_Client): 
     def __init__(self, car1_queue, car2_queue,car3_queue,car4_queue):
@@ -224,23 +208,15 @@ class mywindow(QMainWindow,Ui_Client):
                 if first:
                     time.sleep(5)
                     self.Btn_Mode3.setChecked(True)
-                    time.sleep(5)
-                    try:
+                    time.sleep(2)
+                    if self.carName in self.car1_queue:
                         self.car1_queue.remove(self.carName)
-                    except:
-                        pass
-                    try:
+                    if self.carName in self.car2_queue:
                         self.car2_queue.remove(self.carName)
-                    except:
-                        pass
-                    try:
+                    if self.carName in self.car3_queue:
                         self.car3_queue.remove(self.carName)
-                    except:
-                        pass
-                    try:
+                    if self.carName in self.car4_queue:
                         self.car4_queue.remove(self.carName)
-                    except:
-                        pass
                     self.need_to_stop = False
                 
 
