@@ -117,7 +117,13 @@ class mywindow(QMainWindow,Ui_server_ui):
             self.TCP_Server.tcp_Flag = False
             try:
                 stop_thread(self.ReadData)
+            except:
+                pass
+            try:
                 stop_thread(self.power)
+            except:
+                pass
+            try:
                 stop_thread(self.SendVideo)
             except:
                 pass

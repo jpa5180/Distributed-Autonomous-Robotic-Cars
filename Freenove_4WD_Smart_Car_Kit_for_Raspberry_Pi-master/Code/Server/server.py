@@ -84,6 +84,7 @@ class Server:
             self.Mode='one'
         except Exception as e:
             print ('\n'+"No client connection")
+           
          
     def Reset(self):
         self.StopTcpServer()
