@@ -47,6 +47,8 @@ class Server:
         self.Mode = 'one'
         self.endChar='\n'
         self.intervalChar='#'
+        self.is_alive = True
+
     def get_interface_ip(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         return socket.inet_ntoa(fcntl.ioctl(s.fileno(),
@@ -87,12 +89,15 @@ class Server:
            
          
     def Reset(self):
+        print("Reset")
+        self.is_alive = False
         self.StopTcpServer()
         self.StartTcpServer()
         self.SendVideo=Thread(target=self.sendvideo)
         self.ReadData=Thread(target=self.readdata)
         self.SendVideo.start()
         self.ReadData.start()
+
     def send(self,data):
         self.connection1.send(data.encode('utf-8'))    
     def sendvideo(self):
@@ -129,6 +134,10 @@ class Server:
 
                 for foo in camera.capture_continuous(stream, 'jpeg', use_video_port = True):
                     try:
+                        if not self.is_alive:
+                            self.is_alive = True
+                            break
+
                         #self.connection.flush()
                         stream.seek(0)
                         b = stream.read()

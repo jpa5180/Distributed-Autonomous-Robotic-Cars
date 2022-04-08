@@ -22,7 +22,6 @@ from PyQt5.QtGui import *
 
 #added this
 import multiprocessing
-from pynput.keyboard import Key, Controller
 from queue import Queue
 
 
@@ -37,7 +36,7 @@ class mywindow(QMainWindow,Ui_Client):
         self.car4_queue = car4_queue
         self.car_ip = {"Car 1" : "192.168.0.111", "Car 2" : "192.168.0.112",
                        "Car 3" : "192.168.0.113", "Car 4" : "192.168.0.114"}
-        self.need_to_stop = False
+        self.need_to_stop = [False]
         
         super(mywindow,self).__init__()
         self.setupUi(self)
@@ -176,18 +175,58 @@ class mywindow(QMainWindow,Ui_Client):
     def press_Button(self, button):
         self.timer.singleShot(500,button.animateClick)
 
-    def check_stop(self, q):
+    ######################ADDED#######################
+    ######################ADDED#######################
+    ######################ADDED#######################
+    def check_stop(self):
+        while True:
+            if self.need_to_stop[0]:
+                print()
+                print('Car1 queue:', self.car1_queue)
+                print('Car2 queue:', self.car2_queue)
+                print('Car3 queue:', self.car3_queue)
+                print('Car4 queue:', self.car4_queue)
+                print()
+                if self.Btn_Mode3.isChecked():
+                    self.Btn_Mode1.setChecked(True)
+
+                if self.carName in self.car1_queue and self.carName != self.car1_queue[0]:
+                    continue
+                if self.carName in self.car2_queue and self.carName != self.car2_queue[0]:
+                    continue
+                if self.carName in self.car3_queue and self.carName != self.car3_queue[0]:
+                    continue
+                if self.carName in self.car4_queue and self.carName != self.car4_queue[0]:
+                    continue
+
+                time.sleep(5)
+                self.Btn_Mode3.setChecked(True)
+                self.need_to_stop[0] = False
+                time.sleep(5)
+                if self.carName in self.car1_queue:
+                    self.car1_queue.remove(self.carName)
+                if self.carName in self.car2_queue:
+                    self.car2_queue.remove(self.carName)
+                if self.carName in self.car3_queue:
+                    self.car3_queue.remove(self.carName)
+                if self.carName in self.car4_queue:
+                    self.car4_queue.remove(self.carName)
+    ######################ADDED#######################
+    ######################ADDED#######################
+    ######################ADDED#######################
+
+    def check_stop2(self):
         print("Step 4")
         #keyboard = Controller()
         #key = "q"
         print(self.need_to_stop)
         while True:
-            self.need_to_stop = q.get()
+            #self.need_to_stop = q.get()
             #print("Step 5")
             #if self.carName in self.car1_queue or self.carName in self.car2_queue or
             #    self.carName in self.car3_queue or self.carName in self.car4_queue:
             #        self.Btn_Mode1.setChecked(True)
-            if self.need_to_stop:
+            if self.need_to_stop[0]:
                 self.Btn_Mode1.setChecked(True)
                 print(self.need_to_stop)
                     
@@ -217,7 +256,7 @@ class mywindow(QMainWindow,Ui_Client):
                         self.car3_queue.remove(self.carName)
                     if self.carName in self.car4_queue:
                         self.car4_queue.remove(self.carName)
-                    self.need_to_stop = False
+                    self.need_to_stop[0] = False
                 
 
                     
@@ -588,14 +627,10 @@ class mywindow(QMainWindow,Ui_Client):
                 
                 #added this
                 #self.stop_queue.append(self.carName)
-                print(self.car1_queue)
-                print(self.car2_queue)
-                print(self.car3_queue)
-                print(self.car4_queue)
-                self.car1_queue
-                self.car2_queue
-                self.car3_queue
-                self.car4_queue
+                # print(self.car1_queue)
+                # print(self.car2_queue)
+                # print(self.car3_queue)
+                # print(self.car4_queue)
                 
                 #self.timer.stop()
                 self.TCP.sendData(cmd.CMD_MODE+self.intervalChar+'three'+self.endChar)
@@ -617,9 +652,8 @@ class mywindow(QMainWindow,Ui_Client):
         if self.Btn_Connect.text() == "Connect":
             self.h=self.IP.text()
             self.TCP.StartTcpClient(self.h,)
-            stop_queue = Queue()
             try:
-                self.streaming=Thread(target=self.TCP.streaming,args=(self.h,self.car1_queue, self.car2_queue,self.car3_queue,self.car4_queue,stop_queue,))
+                self.streaming=Thread(target=self.TCP.streaming,args=(self.h,self.car1_queue, self.car2_queue,self.car3_queue,self.car4_queue,self.need_to_stop,))
                 self.streaming.start()
             except:
                 print ('video error')
@@ -649,7 +683,8 @@ class mywindow(QMainWindow,Ui_Client):
             
                 #self.check_stop().moveToThread(self.qthread)
                 #self.qthread.start()
-                self.stop_cars=Thread(target=self.check_stop,args=(stop_queue,))
+                # self.stop_cars=Thread(target=self.check_stop, args=(stop_queue,))
+                self.stop_cars = Thread(target=self.check_stop)
                 self.stop_cars.start()
                 
             except Exception as e:
@@ -898,11 +933,11 @@ if __name__ == '__main__':
         #car_3.join()
         #car_4.join()
 
-        print('\n')
-        print(car1_queue)
-        print(car2_queue)
-        print(car3_queue)
-        print(car4_queue)
+        # print('\n')
+        # print(car1_queue)
+        # print(car2_queue)
+        # print(car3_queue)
+        # print(car4_queue)
 
         #sys.exit(app.exec_())
 
@@ -935,10 +970,10 @@ if __name__ == '__main__':
         #car_3.terminate()
         #car_4.terminate()
         
-        print(car1_queue)
-        print(car2_queue)
-        print(car3_queue)
-        print(car4_queue)
+        # print(car1_queue)
+        # print(car2_queue)
+        # print(car3_queue)
+        # print(car4_queue)
 
     except KeyboardInterrupt:  # When 'Ctrl+C' is pressed, the child program destroy() will be  executed.
         destroy()

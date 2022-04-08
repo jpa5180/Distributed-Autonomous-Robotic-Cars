@@ -91,7 +91,7 @@ class VideoStreaming:
 
         cv2.imwrite(vid,img)
         
-    def streaming(self,ip, car1_queue, car2_queue,car3_queue,car4_queue, q):
+    def streaming(self,ip, car1_queue, car2_queue,car3_queue,car4_queue, need_to_stop):
         stream_bytes = b' '
         try:
             self.client_socket.connect((ip, 8000))
@@ -129,38 +129,71 @@ class VideoStreaming:
                 #new_msg = True
                 #full_msg = b''
 
-                    
-                    
 
-                #added this
+                ######################ADDED#######################
+                ######################ADDED#######################
+                ######################ADDED#######################
                 if self.carName not in self.my_queue:
                     self.my_queue.append(self.carName)
-                    #need_to_stop = True
-                    q.put(True)
-
-                    direction = "no dir"
+                    need_to_stop[0] = True
                     for dist in dist_list:
-                        car_dir = dist[0]
-                        detected_car = self.tags.get(car_dir)
-                        if detected_car == "Car 1":
+                        car_id = dist[0]
+                        detected_car = self.tags[car_id]
+
+                        if detected_car == "Car 1" and self.carName not in car1_queue:
                             car1_queue.append(self.carName)
-                        elif detected_car == "Car 2":
+                        elif detected_car == "Car 2" and self.carName not in car2_queue:
                             car2_queue.append(self.carName)
-                        elif detected_car == "Car 3":
+                        elif detected_car == "Car 3" and self.carName not in car3_queue:
                             car3_queue.append(self.carName)
-                        elif detected_car == "Car 4":
+                        elif detected_car == "Car 4" and self.carName not in car4_queue:
                             car4_queue.append(self.carName)
-                        
-                        if car_dir % 4 == 0:
+
+                        if car_id % 4 == 0:
                             direction = "driving towards me"
-                        elif car_dir % 4 == 1:
+                        elif car_id % 4 == 1:
                             direction = "driving east of me"
-                        elif car_dir % 4 == 2:
+                        elif car_id % 4 == 2:
                             direction = "driving in front of me"
-                        elif car_dir % 4 == 3:
+                        elif car_id % 4 == 3:
                             direction = "driving west of me"
 
-                        print(self.carName + ": detected " + detected_car + " at " + str(dist[1]) + "cm and " + direction)  
+                        print(self.carName + ": detected " + detected_car + " at " + str(dist[1]) + "cm and " + direction)
+                        print()
+                ######################ADDED#######################
+                ######################ADDED#######################
+                ######################ADDED#######################
+                    
+
+                # #added this
+                # if self.carName not in self.my_queue:
+                #     self.my_queue.append(self.carName)
+                #     #need_to_stop = True
+                #     q.put(True)
+                #
+                #     direction = "no dir"
+                #     for dist in dist_list:
+                #         car_dir = dist[0]
+                #         detected_car = self.tags.get(car_dir)
+                #         if detected_car == "Car 1":
+                #             car1_queue.append(self.carName)
+                #         elif detected_car == "Car 2":
+                #             car2_queue.append(self.carName)
+                #         elif detected_car == "Car 3":
+                #             car3_queue.append(self.carName)
+                #         elif detected_car == "Car 4":
+                #             car4_queue.append(self.carName)
+                #
+                #         if car_dir % 4 == 0:
+                #             direction = "driving towards me"
+                #         elif car_dir % 4 == 1:
+                #             direction = "driving east of me"
+                #         elif car_dir % 4 == 2:
+                #             direction = "driving in front of me"
+                #         elif car_dir % 4 == 3:
+                #             direction = "driving west of me"
+                #
+                #         print(self.carName + ": detected " + detected_car + " at " + str(dist[1]) + "cm and " + direction)
                     
                 #print(self.carName)
                 #print(dist_list)
