@@ -22,11 +22,27 @@ from PyQt5.QtGui import *
 
 #added this
 import multiprocessing
+from pynput.keyboard import Key, Controller
+from queue import Queue
+
+class Worker(QThread):
+        #self.timer = times
+        def __init__(self, timer):
+            super(QThread, self).__init__()
+            self.timer = timer
+        
+        def run(self):
+            while True:
+                print("Step 5")
+                time.sleep(2)
+                self.timer.singleShot(500,self.Btn_Mode3.animateClick)
+                time.sleep(2)
+                self.timer.singleShot(500,self.Btn_Mode1.animateClick)
 
 
 
-class mywindow(QMainWindow,Ui_Client):
-            
+
+class mywindow(QMainWindow,Ui_Client): 
     def __init__(self, car1_queue, car2_queue,car3_queue,car4_queue):
         global timer
         #added this
@@ -37,6 +53,7 @@ class mywindow(QMainWindow,Ui_Client):
         self.car4_queue = car4_queue
         self.car_ip = {"Car 1" : "192.168.0.111", "Car 2" : "192.168.0.112",
                        "Car 3" : "192.168.0.113", "Car 4" : "192.168.0.114"}
+        self.need_to_stop = False
         
         super(mywindow,self).__init__()
         self.setupUi(self)
@@ -175,14 +192,72 @@ class mywindow(QMainWindow,Ui_Client):
     def press_Button(self, button):
         self.timer.singleShot(500,button.animateClick)
 
-    def check_stop(self):
+    def check_stop(self, q):
         print("Step 4")
+        #keyboard = Controller()
+        #key = "q"
+        print(self.need_to_stop)
         while True:
-            print("Step 5")
-            time.sleep(2)
-            self.timer.singleShot(500,self.Btn_Mode3.animateClick)
-            time.sleep(2)
-            self.timer.singleShot(500,self.Btn_Mode1.animateClick)
+            self.need_to_stop = q.get()
+            #print("Step 5")
+            #if self.carName in self.car1_queue or self.carName in self.car2_queue or
+            #    self.carName in self.car3_queue or self.carName in self.car4_queue:
+            #        self.Btn_Mode1.setChecked(True)
+            if self.need_to_stop:
+                self.Btn_Mode1.setChecked(True)
+                print(self.need_to_stop)
+                    
+                first = True
+                if self.carName in self.car1_queue:
+                    if self.carName != self.car1_queue[0]:
+                        first = False
+                if self.carName in self.car2_queue:
+                    if self.carName != self.car2_queue[0]:
+                        first = False
+                if self.carName in self.car3_queue:
+                    if self.carName != self.car3_queue[0]:
+                        first = False
+                if self.carName in self.car4_queue:
+                    if self.carName != self.car4_queue[0]:
+                        first = False
+
+                if first:
+                    time.sleep(5)
+                    self.Btn_Mode3.setChecked(True)
+                    time.sleep(5)
+                    try:
+                        self.car1_queue.remove(self.carName)
+                    except:
+                        pass
+                    try:
+                        self.car2_queue.remove(self.carName)
+                    except:
+                        pass
+                    try:
+                        self.car3_queue.remove(self.carName)
+                    except:
+                        pass
+                    try:
+                        self.car4_queue.remove(self.carName)
+                    except:
+                        pass
+                    self.need_to_stop = False
+                
+
+                    
+                #time.sleep(2)
+                #self.timer.singleShot(500,self.Btn_Mode3.animateClick)
+                #time.sleep(2)
+                #self.timer.singleShot(500,self.Btn_Mode1.animateClick)
+                #time.sleep(2)
+                #self.Btn_Mode3.setChecked(True)
+                #keyboard.press(key)
+                #keyboard.release(key)
+                #time.sleep(2)
+                #self.Btn_Mode1.setChecked(True)
+                #keyboard.press(key)
+                #keyboard.release(key)
+            
         
         
     def mousePressEvent(self, event):
@@ -549,6 +624,8 @@ class mywindow(QMainWindow,Ui_Client):
                 #self.timer.stop()
                 self.TCP.sendData(cmd.CMD_MODE+self.intervalChar+'three'+self.endChar)
 
+                print("Step 6")
+
                 #time.sleep(3)
                 #added this
                 #self.check_stop()
@@ -564,8 +641,9 @@ class mywindow(QMainWindow,Ui_Client):
         if self.Btn_Connect.text() == "Connect":
             self.h=self.IP.text()
             self.TCP.StartTcpClient(self.h,)
+            stop_queue = Queue()
             try:
-                self.streaming=Thread(target=self.TCP.streaming,args=(self.h,self.car1_queue, self.car2_queue,self.car3_queue,self.car4_queue,))
+                self.streaming=Thread(target=self.TCP.streaming,args=(self.h,self.car1_queue, self.car2_queue,self.car3_queue,self.car4_queue,stop_queue,))
                 self.streaming.start()
             except:
                 print ('video error')
@@ -582,10 +660,10 @@ class mywindow(QMainWindow,Ui_Client):
                 #self.timer.moveToThread(self)
                 #self.qthread.moveToThread(self.check_stop)
                 #self.timer.timeout.connect(self.check_stop)
-                self.worker = self.Worker(self.timer)
+                #self.worker = self.Worker(self.timer)
                 #self.timer.moveToThread(self.worker)
                 #self.timer.timeout.connect(self.worker.run)
-                self.worker.start()
+                #self.worker.start()
                 #self.worker.moveToThread(self.qthread)
                 #self.qthread.started.connect(self.worker.run)
                 print("Step 2")
@@ -595,8 +673,8 @@ class mywindow(QMainWindow,Ui_Client):
             
                 #self.check_stop().moveToThread(self.qthread)
                 #self.qthread.start()
-                #self.stop_cars=Thread(target=self.check_stop)
-                #self.stop_cars.start()
+                self.stop_cars=Thread(target=self.check_stop,args=(stop_queue,))
+                self.stop_cars.start()
                 
             except Exception as e:
                 print ('stop_cars error')
@@ -617,33 +695,74 @@ class mywindow(QMainWindow,Ui_Client):
             #self.timer.singleShot(50,self.Btn_Mode1.animateClick)
             #self.press_Button(self.Btn_Mode1)
             
+##            try:
+##                stop_thread(self.recv)
+##                stop_thread(self.power)
+##                stop_thread(self.streaming)
+##                #added this
+##                stop_thread(self.stop_cars)
+##                print("Step 7")
+##                #self.stop_cars.quit()
+##                #self.qthread.quit()
+##            except Exception as e:
+##                pass
+            
+            #added this
             try:
                 stop_thread(self.recv)
+            except:
+                pass
+            try:
                 stop_thread(self.power)
+            except:
+                pass
+            try:
                 stop_thread(self.streaming)
+            except:
+                pass
+            try:
                 #added this
-                stop_thread(stop_cars)
+                stop_thread(self.stop_cars)
+                print("Step 7")
                 #self.stop_cars.quit()
                 #self.qthread.quit()
             except:
                 pass
+
+            
             self.TCP.StopTcpcClient()
 
 
     def close(self):
-        #added this
-        #self.timer.singleShot(50,self.Btn_Mode1.animateClick)
-        
         self.timer.stop()
+##        try:
+##            stop_thread(self.recv)
+##            stop_thread(self.streaming)
+##            #added this
+##            stop_thread(self.stop_cars)
+##            #self.stop_cars.quit()
+##            #self.qthread.quit()
+##        except:
+##            pass
+
+        #added this
         try:
             stop_thread(self.recv)
+        except:
+            pass
+        try:
             stop_thread(self.streaming)
+        except:
+            pass
+        try:
             #added this
-            stop_thread(stop_cars)
+            stop_thread(self.stop_cars)
             #self.stop_cars.quit()
             #self.qthread.quit()
         except:
             pass
+
+        
         self.TCP.StopTcpcClient()
 
         #added this
@@ -756,20 +875,6 @@ class mywindow(QMainWindow,Ui_Client):
         except Exception as e:
             print(e)
         self.TCP.video_Flag=True
-
-    class Worker(QThread):
-        #self.timer = times
-        def __init__(self, timer):
-            super(QThread, self).__init__()
-            self.timer = timer
-        
-        def run(self):
-            while True:
-                print("Step 5")
-                time.sleep(2)
-                self.timer.singleShot(500,self.Btn_Mode3.animateClick)
-                time.sleep(2)
-                self.timer.singleShot(500,self.Btn_Mode1.animateClick)
 
 #added this
 def car(car1_queue, car2_queue,car3_queue,car4_queue):

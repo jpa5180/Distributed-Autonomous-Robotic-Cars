@@ -91,7 +91,7 @@ class VideoStreaming:
 
         cv2.imwrite(vid,img)
         
-    def streaming(self,ip, car1_queue, car2_queue,car3_queue,car4_queue):
+    def streaming(self,ip, car1_queue, car2_queue,car3_queue,car4_queue, q):
         stream_bytes = b' '
         try:
             self.client_socket.connect((ip, 8000))
@@ -135,6 +135,8 @@ class VideoStreaming:
                 #added this
                 if self.carName not in self.my_queue:
                     self.my_queue.append(self.carName)
+                    #need_to_stop = True
+                    q.put(True)
 
                     direction = "no dir"
                     for dist in dist_list:
