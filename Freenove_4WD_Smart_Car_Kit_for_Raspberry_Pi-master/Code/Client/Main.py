@@ -23,7 +23,10 @@ from PyQt5.QtGui import *
 #added this
 import multiprocessing
 
+
+
 class mywindow(QMainWindow,Ui_Client):
+            
     def __init__(self, car1_queue, car2_queue,car3_queue,car4_queue):
         global timer
         #added this
@@ -172,12 +175,14 @@ class mywindow(QMainWindow,Ui_Client):
     def press_Button(self, button):
         self.timer.singleShot(500,button.animateClick)
 
-    def check_stop(self, timer):
+    def check_stop(self):
+        print("Step 4")
         while True:
+            print("Step 5")
             time.sleep(2)
-            timer.singleShot(500,self.Btn_Mode1.animateClick)
+            self.timer.singleShot(500,self.Btn_Mode3.animateClick)
             time.sleep(2)
-            timer.singleShot(500,self.Btn_Mode3.animateClick)
+            self.timer.singleShot(500,self.Btn_Mode1.animateClick)
         
         
     def mousePressEvent(self, event):
@@ -546,7 +551,8 @@ class mywindow(QMainWindow,Ui_Client):
 
                 #time.sleep(3)
                 #added this
-                self.press_Button(self.Btn_Mode1)
+                #self.check_stop()
+                #self.press_Button(self.Btn_Mode1)
                     
         if Mode.text() == "M-Line":
             if Mode.isChecked() == True:
@@ -568,6 +574,34 @@ class mywindow(QMainWindow,Ui_Client):
                 self.recv.start()
             except:
                 print ('recv error')
+
+            #added this
+            try:
+                print("Step 1")
+                #self.qthread = QThread()
+                #self.timer.moveToThread(self)
+                #self.qthread.moveToThread(self.check_stop)
+                #self.timer.timeout.connect(self.check_stop)
+                self.worker = self.Worker(self.timer)
+                #self.timer.moveToThread(self.worker)
+                #self.timer.timeout.connect(self.worker.run)
+                self.worker.start()
+                #self.worker.moveToThread(self.qthread)
+                #self.qthread.started.connect(self.worker.run)
+                print("Step 2")
+
+                #self.qthread = QThread()
+                #self.qthread.started.connect(self.check_stop)
+            
+                #self.check_stop().moveToThread(self.qthread)
+                #self.qthread.start()
+                #self.stop_cars=Thread(target=self.check_stop)
+                #self.stop_cars.start()
+                
+            except Exception as e:
+                print ('stop_cars error')
+                print(e)
+            print("Step 3")
                 
             self.Btn_Connect.setText( "Disconnect")
             print ('Server address:'+str(self.h)+'\n')
@@ -587,6 +621,10 @@ class mywindow(QMainWindow,Ui_Client):
                 stop_thread(self.recv)
                 stop_thread(self.power)
                 stop_thread(self.streaming)
+                #added this
+                stop_thread(stop_cars)
+                #self.stop_cars.quit()
+                #self.qthread.quit()
             except:
                 pass
             self.TCP.StopTcpcClient()
@@ -600,6 +638,10 @@ class mywindow(QMainWindow,Ui_Client):
         try:
             stop_thread(self.recv)
             stop_thread(self.streaming)
+            #added this
+            stop_thread(stop_cars)
+            #self.stop_cars.quit()
+            #self.qthread.quit()
         except:
             pass
         self.TCP.StopTcpcClient()
@@ -714,6 +756,20 @@ class mywindow(QMainWindow,Ui_Client):
         except Exception as e:
             print(e)
         self.TCP.video_Flag=True
+
+    class Worker(QThread):
+        #self.timer = times
+        def __init__(self, timer):
+            super(QThread, self).__init__()
+            self.timer = timer
+        
+        def run(self):
+            while True:
+                print("Step 5")
+                time.sleep(2)
+                self.timer.singleShot(500,self.Btn_Mode3.animateClick)
+                time.sleep(2)
+                self.timer.singleShot(500,self.Btn_Mode1.animateClick)
 
 #added this
 def car(car1_queue, car2_queue,car3_queue,car4_queue):
