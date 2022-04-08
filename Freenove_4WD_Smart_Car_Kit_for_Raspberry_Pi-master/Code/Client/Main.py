@@ -24,11 +24,14 @@ from PyQt5.QtGui import *
 import multiprocessing
 
 class mywindow(QMainWindow,Ui_Client):
-    def __init__(self, map_1):
+    def __init__(self, car1_queue, car2_queue,car3_queue,car4_queue):
         global timer
         #added this
         self.carName = str(multiprocessing.current_process().name)
-        self.map_1 = map_1
+        self.car1_queue = car1_queue
+        self.car2_queue = car2_queue
+        self.car3_queue = car3_queue
+        self.car4_queue = car4_queue
         self.car_ip = {"Car 1" : "192.168.0.111", "Car 2" : "192.168.0.112",
                        "Car 3" : "192.168.0.113", "Car 4" : "192.168.0.114"}
         
@@ -38,7 +41,7 @@ class mywindow(QMainWindow,Ui_Client):
         self.intervalChar='#'
         self.h=self.IP.text()
         #added this
-        self.TCP=VideoStreaming(self.carName)
+        self.TCP=VideoStreaming(self.carName, self.car1_queue, self.car2_queue,self.car3_queue,self.car4_queue)
         
         #self.TCP=VideoStreaming()
         self.servo1=90
@@ -528,7 +531,15 @@ class mywindow(QMainWindow,Ui_Client):
             if Mode.isChecked() == True:
                 
                 #added this
-                self.map_1.append(self.carName)
+                #self.stop_queue.append(self.carName)
+                print(self.car1_queue)
+                print(self.car2_queue)
+                print(self.car3_queue)
+                print(self.car4_queue)
+                self.car1_queue
+                self.car2_queue
+                self.car3_queue
+                self.car4_queue
                 
                 #self.timer.stop()
                 self.TCP.sendData(cmd.CMD_MODE+self.intervalChar+'three'+self.endChar)
@@ -548,7 +559,7 @@ class mywindow(QMainWindow,Ui_Client):
             self.h=self.IP.text()
             self.TCP.StartTcpClient(self.h,)
             try:
-                self.streaming=Thread(target=self.TCP.streaming,args=(self.h,))
+                self.streaming=Thread(target=self.TCP.streaming,args=(self.h,self.car1_queue, self.car2_queue,self.car3_queue,self.car4_queue,))
                 self.streaming.start()
             except:
                 print ('video error')
@@ -705,9 +716,9 @@ class mywindow(QMainWindow,Ui_Client):
         self.TCP.video_Flag=True
 
 #added this
-def car(map_1):
+def car(car1_queue, car2_queue,car3_queue,car4_queue):
     app = QApplication(sys.argv)
-    myshow=mywindow(map_1)
+    myshow=mywindow(car1_queue, car2_queue,car3_queue,car4_queue)
     myshow.show();
     sys.exit(app.exec_())
 
@@ -731,12 +742,15 @@ def destroy():
 if __name__ == '__main__':
     try:
         manager = multiprocessing.Manager()
-        map_1 = manager.list()
+        car1_queue = manager.list()
+        car2_queue = manager.list()
+        car3_queue = manager.list()
+        car4_queue = manager.list()
         
-        car_1 = multiprocessing.Process(name='Car 1', target=car, args=[map_1])
-        car_2 = multiprocessing.Process(name='Car 2', target=car, args=[map_1])
-        car_3 = multiprocessing.Process(name='Car 3', target=car, args=[map_1])
-        car_4 = multiprocessing.Process(name='Car 4', target=car, args=[map_1])
+        car_1 = multiprocessing.Process(name='Car 1', target=car, args=[car1_queue, car2_queue,car3_queue,car4_queue])
+        car_2 = multiprocessing.Process(name='Car 2', target=car, args=[car1_queue, car2_queue,car3_queue,car4_queue])
+        car_3 = multiprocessing.Process(name='Car 3', target=car, args=[car1_queue, car2_queue,car3_queue,car4_queue])
+        car_4 = multiprocessing.Process(name='Car 4', target=car, args=[car1_queue, car2_queue,car3_queue,car4_queue])
         car_1.start()
         car_2.start()
         car_3.start()
@@ -748,7 +762,10 @@ if __name__ == '__main__':
         #car_4.join()
 
         print('\n')
-        print(map_1)
+        print(car1_queue)
+        print(car2_queue)
+        print(car3_queue)
+        print(car4_queue)
 
         #sys.exit(app.exec_())
 
@@ -760,19 +777,19 @@ if __name__ == '__main__':
                     break
                 if not car_1.is_alive():
                     car_1.terminate()
-                    car_1 = multiprocessing.Process(name='Car 1', target=car, args=[map_1])
+                    car_1 = multiprocessing.Process(name='Car 1', target=car, args=[car1_queue, car2_queue,car3_queue,car4_queue])
                     car_1.start()
                 if not car_2.is_alive():
                     car_2.terminate()
-                    car_2 = multiprocessing.Process(name='Car 2', target=car, args=[map_1])
+                    car_2 = multiprocessing.Process(name='Car 2', target=car, args=[car1_queue, car2_queue,car3_queue,car4_queue])
                     car_2.start()
                 if not car_3.is_alive():
                     car_3.terminate()
-                    car_3 = multiprocessing.Process(name='Car 3', target=car, args=[map_1])
+                    car_3 = multiprocessing.Process(name='Car 3', target=car, args=[car1_queue, car2_queue,car3_queue,car4_queue])
                     car_3.start()
                 if not car_4.is_alive():
                     car_4.terminate()
-                    car_4 = multiprocessing.Process(name='Car 4', target=car, args=[map_1])
+                    car_4 = multiprocessing.Process(name='Car 4', target=car, args=[car1_queue, car2_queue,car3_queue,car4_queue])
                     car_4.start()
                 #time.sleep(2)
 
@@ -780,9 +797,16 @@ if __name__ == '__main__':
         #car_2.terminate()
         #car_3.terminate()
         #car_4.terminate()
-        print(map_1)
+        
+        print(car1_queue)
+        print(car2_queue)
+        print(car3_queue)
+        print(car4_queue)
 
     except KeyboardInterrupt:  # When 'Ctrl+C' is pressed, the child program destroy() will be  executed.
+        destroy()
+    except Exception as e:
+        print(e)
         destroy()
 
     sys.exit()
