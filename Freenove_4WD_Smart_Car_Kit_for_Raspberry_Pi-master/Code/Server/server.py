@@ -47,7 +47,6 @@ class Server:
         self.Mode = 'one'
         self.endChar='\n'
         self.intervalChar='#'
-        self.is_alive = True
 
     def get_interface_ip(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -89,8 +88,6 @@ class Server:
            
          
     def Reset(self):
-        print("Reset")
-        self.is_alive = False
         self.StopTcpServer()
         self.StartTcpServer()
         self.SendVideo=Thread(target=self.sendvideo)
@@ -134,9 +131,6 @@ class Server:
 
                 for foo in camera.capture_continuous(stream, 'jpeg', use_video_port = True):
                     try:
-                        if not self.is_alive:
-                            self.is_alive = True
-                            break
 
                         #self.connection.flush()
                         stream.seek(0)
@@ -174,20 +168,20 @@ class Server:
                  
     def stopMode(self):
         try:
-            stop_thread(self.infraredRun)
             self.PWM.setMotorModel(0,0,0,0)
+            stop_thread(self.infraredRun)
         except:
             pass
         try:
-            stop_thread(self.lightRun)
             self.PWM.setMotorModel(0,0,0,0)
+            stop_thread(self.lightRun)
         except:
             pass            
         try:
-            stop_thread(self.ultrasonicRun)
             self.PWM.setMotorModel(0,0,0,0)
             self.servo.setServoPwm('0',90)
             self.servo.setServoPwm('1',90)
+            stop_thread(self.ultrasonicRun)
         except:
             pass
         

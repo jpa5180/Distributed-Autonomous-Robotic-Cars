@@ -181,12 +181,6 @@ class mywindow(QMainWindow,Ui_Client):
     def check_stop(self):
         while True:
             if self.need_to_stop[0]:
-                print()
-                print('Car1 queue:', self.car1_queue)
-                print('Car2 queue:', self.car2_queue)
-                print('Car3 queue:', self.car3_queue)
-                print('Car4 queue:', self.car4_queue)
-                print()
                 if self.Btn_Mode3.isChecked():
                     self.Btn_Mode1.setChecked(True)
 
@@ -198,6 +192,13 @@ class mywindow(QMainWindow,Ui_Client):
                     continue
                 if self.carName in self.car4_queue and self.carName != self.car4_queue[0]:
                     continue
+
+                print()
+                print('Car1 queue:', self.car1_queue)
+                print('Car2 queue:', self.car2_queue)
+                print('Car3 queue:', self.car3_queue)
+                print('Car4 queue:', self.car4_queue)
+                print()
 
                 time.sleep(5)
                 self.Btn_Mode3.setChecked(True)
@@ -257,22 +258,6 @@ class mywindow(QMainWindow,Ui_Client):
                     if self.carName in self.car4_queue:
                         self.car4_queue.remove(self.carName)
                     self.need_to_stop[0] = False
-                
-
-                    
-                #time.sleep(2)
-                #self.timer.singleShot(500,self.Btn_Mode3.animateClick)
-                #time.sleep(2)
-                #self.timer.singleShot(500,self.Btn_Mode1.animateClick)
-                #time.sleep(2)
-                #self.Btn_Mode3.setChecked(True)
-                #keyboard.press(key)
-                #keyboard.release(key)
-                #time.sleep(2)
-                #self.Btn_Mode1.setChecked(True)
-                #keyboard.press(key)
-                #keyboard.release(key)
-            
         
         
     def mousePressEvent(self, event):
@@ -624,24 +609,8 @@ class mywindow(QMainWindow,Ui_Client):
                 self.TCP.sendData(cmd.CMD_MODE+self.intervalChar+'two'+self.endChar)
         if Mode.text() == "M-Sonic":
             if Mode.isChecked() == True:
-                
-                #added this
-                #self.stop_queue.append(self.carName)
-                # print(self.car1_queue)
-                # print(self.car2_queue)
-                # print(self.car3_queue)
-                # print(self.car4_queue)
-                
                 #self.timer.stop()
                 self.TCP.sendData(cmd.CMD_MODE+self.intervalChar+'three'+self.endChar)
-
-                #print("Step 6")
-
-                #time.sleep(3)
-                #added this
-                #self.check_stop()
-                #self.press_Button(self.Btn_Mode1)
-                    
         if Mode.text() == "M-Line":
             if Mode.isChecked() == True:
                 #self.timer.stop()
@@ -665,59 +634,20 @@ class mywindow(QMainWindow,Ui_Client):
 
             #added this
             try:
-                #print("Step 1")
-                #self.qthread = QThread()
-                #self.timer.moveToThread(self)
-                #self.qthread.moveToThread(self.check_stop)
-                #self.timer.timeout.connect(self.check_stop)
-                #self.worker = self.Worker(self.timer)
-                #self.timer.moveToThread(self.worker)
-                #self.timer.timeout.connect(self.worker.run)
-                #self.worker.start()
-                #self.worker.moveToThread(self.qthread)
-                #self.qthread.started.connect(self.worker.run)
-                #print("Step 2")
-
-                #self.qthread = QThread()
-                #self.qthread.started.connect(self.check_stop)
-            
-                #self.check_stop().moveToThread(self.qthread)
-                #self.qthread.start()
-                # self.stop_cars=Thread(target=self.check_stop, args=(stop_queue,))
                 self.stop_cars = Thread(target=self.check_stop)
                 self.stop_cars.start()
-                
             except Exception as e:
                 print ('stop_cars error')
                 print(e)
-            #print("Step 3")
-                
+            
             self.Btn_Connect.setText( "Disconnect")
             print ('Server address:'+str(self.h)+'\n')
 
             #added this
-            #self.timer.singleShot(500,self.Btn_Mode3.animateClick)
             self.press_Button(self.Btn_Mode3)
             
         elif self.Btn_Connect.text()=="Disconnect":
             self.Btn_Connect.setText( "Connect")
-            
-            #added this
-            #time.sleep(0.5)
-            #self.timer.singleShot(50,self.Btn_Mode1.animateClick)
-            #self.press_Button(self.Btn_Mode1)
-            
-##            try:
-##                stop_thread(self.recv)
-##                stop_thread(self.power)
-##                stop_thread(self.streaming)
-##                #added this
-##                stop_thread(self.stop_cars)
-##                print("Step 7")
-##                #self.stop_cars.quit()
-##                #self.qthread.quit()
-##            except Exception as e:
-##                pass
             
             #added this
             try:
@@ -735,27 +665,14 @@ class mywindow(QMainWindow,Ui_Client):
             try:
                 #added this
                 stop_thread(self.stop_cars)
-               # print("Step 7")
-                #self.stop_cars.quit()
-                #self.qthread.quit()
             except:
                 pass
-
             
             self.TCP.StopTcpcClient()
 
 
     def close(self):
         self.timer.stop()
-##        try:
-##            stop_thread(self.recv)
-##            stop_thread(self.streaming)
-##            #added this
-##            stop_thread(self.stop_cars)
-##            #self.stop_cars.quit()
-##            #self.qthread.quit()
-##        except:
-##            pass
 
         #added this
         try:
@@ -769,8 +686,6 @@ class mywindow(QMainWindow,Ui_Client):
         try:
             #added this
             stop_thread(self.stop_cars)
-            #self.stop_cars.quit()
-            #self.qthread.quit()
         except:
             pass
 
@@ -929,19 +844,7 @@ if __name__ == '__main__':
         car_3.start()
         car_4.start()
 
-        #car_1.join()
-        #car_2.join()
-        #car_3.join()
-        #car_4.join()
-
-        # print('\n')
-        # print(car1_queue)
-        # print(car2_queue)
-        # print(car3_queue)
-        # print(car4_queue)
-
         #sys.exit(app.exec_())
-
         
         if multiprocessing.current_process().name == "MainProcess":
             while True:
@@ -965,16 +868,6 @@ if __name__ == '__main__':
                     car_4 = multiprocessing.Process(name='Car 4', target=car, args=[car1_queue, car2_queue,car3_queue,car4_queue])
                     car_4.start()
                 #time.sleep(2)
-
-        #car_1.terminate()
-        #car_2.terminate()
-        #car_3.terminate()
-        #car_4.terminate()
-        
-        # print(car1_queue)
-        # print(car2_queue)
-        # print(car3_queue)
-        # print(car4_queue)
 
     except KeyboardInterrupt:  # When 'Ctrl+C' is pressed, the child program destroy() will be  executed.
         destroy()

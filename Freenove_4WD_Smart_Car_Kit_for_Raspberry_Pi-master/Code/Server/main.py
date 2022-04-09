@@ -132,11 +132,15 @@ class mywindow(QMainWindow,Ui_server_ui):
             
 if __name__ == '__main__':
     myshow=mywindow()
-    if myshow.user_ui==True:
-        myshow.show();   
-        sys.exit(myshow.app.exec_())
-    else:
-        try:
-            pass
-        except KeyboardInterrupt:
-            myshow.close()
+    try:
+        if myshow.user_ui==True:
+            myshow.show();   
+            sys.exit(myshow.app.exec_())
+        else:
+            try:
+                pass
+            except KeyboardInterrupt:
+                myshow.close()
+    except KeyboardInterrupt:
+        myshow.TCP_Server.stopMode()
+        myshow.close()

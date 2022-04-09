@@ -109,7 +109,6 @@ class VideoStreaming:
         
         while True:
             #added this
-            #print("Step 1")
             try:
                 HEADERSIZE = 10
                 full_msg = b''
@@ -119,15 +118,10 @@ class VideoStreaming:
                 msglen = int(msg[:HEADERSIZE])
                 full_msg += msg
                 while len(full_msg)-HEADERSIZE < msglen:
-                    #print("Step 3")
                     msg = self.client_socket2.recv(1024)
                     full_msg += msg
 
-                #print("\n")
-                #print(full_msg)
                 dist_list = pickle.loads(full_msg[HEADERSIZE:])
-                #new_msg = True
-                #full_msg = b''
 
 
                 ######################ADDED#######################
@@ -160,59 +154,10 @@ class VideoStreaming:
 
                         print(self.carName + ": detected " + detected_car + " at " + str(dist[1]) + "cm and " + direction)
                         print()
-                ######################ADDED#######################
-                ######################ADDED#######################
-                ######################ADDED#######################
-                    
-
-                # #added this
-                # if self.carName not in self.my_queue:
-                #     self.my_queue.append(self.carName)
-                #     #need_to_stop = True
-                #     q.put(True)
-                #
-                #     direction = "no dir"
-                #     for dist in dist_list:
-                #         car_dir = dist[0]
-                #         detected_car = self.tags.get(car_dir)
-                #         if detected_car == "Car 1":
-                #             car1_queue.append(self.carName)
-                #         elif detected_car == "Car 2":
-                #             car2_queue.append(self.carName)
-                #         elif detected_car == "Car 3":
-                #             car3_queue.append(self.carName)
-                #         elif detected_car == "Car 4":
-                #             car4_queue.append(self.carName)
-                #
-                #         if car_dir % 4 == 0:
-                #             direction = "driving towards me"
-                #         elif car_dir % 4 == 1:
-                #             direction = "driving east of me"
-                #         elif car_dir % 4 == 2:
-                #             direction = "driving in front of me"
-                #         elif car_dir % 4 == 3:
-                #             direction = "driving west of me"
-                #
-                #         print(self.carName + ": detected " + detected_car + " at " + str(dist[1]) + "cm and " + direction)
-                    
-                #print(self.carName)
-                #print(dist_list)
-        
-                #print("Step 5")
-
-##                data=""
-##                data=self.client_socket2.recv(1024)
-##                dist_list = pickle.loads(data)
-##                print(self.carName)
-##                print(dist_list)
-                
             except Exception as e:
-                #print("Step 5")
-                print("Unpickling Error: ")
+                print("Error with streaming: ")
                 print(e)
                 break
-            
-            #print("Step 6")
             
             #try:
                 #stream_bytes= self.connection.read(4) 
