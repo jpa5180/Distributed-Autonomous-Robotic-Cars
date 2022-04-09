@@ -42,7 +42,7 @@ class Apriltag:
         )
 
         if len(tags) == 0:
-            print('\nTag not found.\n')
+            #print('\nTag not found.\n')
             return []
         else:
             return [(tag.tag_id, self.dist(tag)) for tag in tags if self.dist(tag) <= COLLISION_DIST]

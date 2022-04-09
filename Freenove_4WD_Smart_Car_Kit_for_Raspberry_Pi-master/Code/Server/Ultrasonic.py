@@ -54,11 +54,13 @@ class Ultrasonic:
             if R < 10 :
                 PWM.setMotorModel(-1500,-1500,1500,1500)
         else :
-            self.PWM.setMotorModel(600,600,600,600)
+            #self.PWM.setMotorModel(600,600,600,600)
+            self.PWM.setMotorModel(500,500,500,500)
                 
     def run(self):
         self.PWM=Motor()
         self.pwm_S=Servo()
+        self.pwm_S.setServoPwm('1',100)
         for i in range(30,151,60):
                 self.pwm_S.setServoPwm('0',i)
                 time.sleep(0.2)

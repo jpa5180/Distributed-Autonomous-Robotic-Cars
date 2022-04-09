@@ -6,6 +6,7 @@ import socket
 import io
 import sys
 import struct
+import multiprocessing
 from PIL import Image
 from multiprocessing import Process
 from Command import COMMAND as cmd
@@ -91,7 +92,7 @@ class VideoStreaming:
 
         cv2.imwrite(vid,img)
         
-    def streaming(self,ip, car1_queue, car2_queue,car3_queue,car4_queue, need_to_stop):
+    def streaming(self,ip, car1_queue, car2_queue,car3_queue,car4_queue, need_to_stop, lock, my_turn):
         stream_bytes = b' '
         try:
             self.client_socket.connect((ip, 8000))
@@ -106,7 +107,7 @@ class VideoStreaming:
         except:
             #print "command port connect failed"
             pass
-        
+
         while True:
             #added this
             try:
@@ -130,6 +131,8 @@ class VideoStreaming:
                 if self.carName not in self.my_queue:
                     self.my_queue.append(self.carName)
                     need_to_stop[0] = True
+
+                    lock.acquire()
                     for dist in dist_list:
                         car_id = dist[0]
                         detected_car = self.tags[car_id]
@@ -154,8 +157,15 @@ class VideoStreaming:
 
                         print(self.carName + ": detected " + detected_car + " at " + str(dist[1]) + "cm and " + direction)
                         print()
+                    lock.release()
+                    my_turn[0] = True
             except Exception as e:
-                print("Error with streaming: ")
+                try:
+                    lock.release()
+                except:
+                    pass
+                print("Error with streaming at " + self.carName)
+                print()
                 print(e)
                 break
             
