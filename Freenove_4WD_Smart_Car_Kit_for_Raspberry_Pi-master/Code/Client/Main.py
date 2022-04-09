@@ -169,7 +169,7 @@ class mywindow(QMainWindow,Ui_Client):
 
         #added this
         #self.timer.singleShot(500,self.Btn_Connect.animateClick)
-        #self.press_Button(self.Btn_Connect)
+        self.press_Button(self.Btn_Connect)
 
     #added this
     def press_Button(self, button):
@@ -216,7 +216,7 @@ class mywindow(QMainWindow,Ui_Client):
     ######################ADDED#######################
 
     def check_stop2(self):
-        print("Step 4")
+        #print("Step 4")
         #keyboard = Controller()
         #key = "q"
         print(self.need_to_stop)
@@ -635,7 +635,7 @@ class mywindow(QMainWindow,Ui_Client):
                 #self.timer.stop()
                 self.TCP.sendData(cmd.CMD_MODE+self.intervalChar+'three'+self.endChar)
 
-                print("Step 6")
+                #print("Step 6")
 
                 #time.sleep(3)
                 #added this
@@ -665,7 +665,7 @@ class mywindow(QMainWindow,Ui_Client):
 
             #added this
             try:
-                print("Step 1")
+                #print("Step 1")
                 #self.qthread = QThread()
                 #self.timer.moveToThread(self)
                 #self.qthread.moveToThread(self.check_stop)
@@ -676,7 +676,7 @@ class mywindow(QMainWindow,Ui_Client):
                 #self.worker.start()
                 #self.worker.moveToThread(self.qthread)
                 #self.qthread.started.connect(self.worker.run)
-                print("Step 2")
+                #print("Step 2")
 
                 #self.qthread = QThread()
                 #self.qthread.started.connect(self.check_stop)
@@ -690,13 +690,14 @@ class mywindow(QMainWindow,Ui_Client):
             except Exception as e:
                 print ('stop_cars error')
                 print(e)
-            print("Step 3")
+            #print("Step 3")
                 
             self.Btn_Connect.setText( "Disconnect")
             print ('Server address:'+str(self.h)+'\n')
 
             #added this
             #self.timer.singleShot(500,self.Btn_Mode3.animateClick)
+            self.press_Button(self.Btn_Mode3)
             
         elif self.Btn_Connect.text()=="Disconnect":
             self.Btn_Connect.setText( "Connect")
@@ -734,7 +735,7 @@ class mywindow(QMainWindow,Ui_Client):
             try:
                 #added this
                 stop_thread(self.stop_cars)
-                print("Step 7")
+               # print("Step 7")
                 #self.stop_cars.quit()
                 #self.qthread.quit()
             except:
