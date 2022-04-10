@@ -18,7 +18,7 @@ with open('../Camera/calibration_result.txt') as f:
 
 
 TAG_SIZE = 0.034 # in meters
-COLLISION_DIST = 50
+COLLISION_DIST = 60
 
 
 class Apriltag:
