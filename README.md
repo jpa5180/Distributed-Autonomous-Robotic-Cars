@@ -1,3 +1,6 @@
+<h1>Project</h1>
+This is an autonomous mobile car system built on Freenove 4WD Smart Car. A queue system with AprilTag is used for traffic control.
+
 <h1>Installation</h1>
 Client (Windows)
 <br>
