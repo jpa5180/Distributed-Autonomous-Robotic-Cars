@@ -109,6 +109,20 @@ class VideoStreaming:
             pass
 
         while True:
+            #try:
+                #stream_bytes= self.connection.read(4) 
+                #leng=struct.unpack('<L', stream_bytes[:4])
+                #jpg=self.connection.read(leng[0])
+                #if self.IsValidImage4Bytes(jpg):
+                #            image = cv2.imdecode(np.frombuffer(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
+                #            if self.video_Flag:
+                #                self.face_detect(image)
+                #                self.video_Flag=False
+            #except Exception as e:
+            #    print (e)
+            #    break
+            
+            
             #added this
             try:
                 HEADERSIZE = 10
@@ -168,19 +182,6 @@ class VideoStreaming:
                 print()
                 print(e)
                 break
-            
-            #try:
-                #stream_bytes= self.connection.read(4) 
-                #leng=struct.unpack('<L', stream_bytes[:4])
-                #jpg=self.connection.read(leng[0])
-                #if self.IsValidImage4Bytes(jpg):
-                #            image = cv2.imdecode(np.frombuffer(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
-                #            if self.video_Flag:
-                #                self.face_detect(image)
-                #                self.video_Flag=False
-            #except Exception as e:
-            #    print (e)
-            #    break
                   
     def sendData(self,s):
         if self.connect_Flag:
