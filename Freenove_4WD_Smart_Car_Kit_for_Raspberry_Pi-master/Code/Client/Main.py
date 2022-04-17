@@ -210,6 +210,7 @@ class mywindow(QMainWindow,Ui_Client):
                 print()
                 self.Btn_Mode3.setChecked(True)
                 self.need_to_stop[0] = False
+                self.my_turn[0] = False
                 time.sleep(5)
                 self.lock.acquire()
                 if self.carName in self.car1_queue:
@@ -221,7 +222,6 @@ class mywindow(QMainWindow,Ui_Client):
                 if self.carName in self.car4_queue:
                     self.car4_queue.remove(self.carName)
                 self.lock.release()
-                self.my_turn[0] = False
                 
     ######################ADDED#######################
     ######################ADDED#######################
