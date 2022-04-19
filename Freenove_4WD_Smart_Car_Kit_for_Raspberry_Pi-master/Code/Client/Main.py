@@ -199,10 +199,10 @@ class mywindow(QMainWindow,Ui_Client):
                     continue
 
                 print()
-                print('Car1 queue:', self.car1_queue)
-                print('Car2 queue:', self.car2_queue)
-                print('Car3 queue:', self.car3_queue)
-                print('Car4 queue:', self.car4_queue)
+                print('Car 1 queue:', self.car1_queue)
+                print('Car 2 queue:', self.car2_queue)
+                print('Car 3 queue:', self.car3_queue)
+                print('Car 4 queue:', self.car4_queue)
                 print()
 
                 time.sleep(5)
