@@ -27,7 +27,7 @@ class VideoStreaming:
         self.tags = {0 : "Car 1", 1 : "Car 1", 2 : "Car 1", 3 : "Car 1",
                      4 : "Car 2", 5 : "Car 2", 6 : "Car 2", 7 : "Car 2",
                      8 : "Car 3", 9 : "Car 3", 10 : "Car 3", 11 : "Car 3",
-                     12 : "Car 4", 13 : "Car 3", 14 : "Car 3", 15 : "Car 3"}
+                     12 : "Car 4", 13 : "Car 4", 14 : "Car 4", 15 : "Car 4"}
         if self.carName == "Car 1":
             self.my_queue = car1_queue
         elif self.carName == "Car 2":
